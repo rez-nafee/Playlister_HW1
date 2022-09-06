@@ -4,7 +4,7 @@
  * This class provides responses for all user interface interactions.
  * 
  * @author McKilla Gorilla
- * @author ?
+ * @author Rezvan Nafee
  */
 export default class PlaylisterController {
     constructor() { }
@@ -51,6 +51,12 @@ export default class PlaylisterController {
             this.model.loadList(newList.id);
             this.model.saveLists();
         }
+
+        //HANDLER FOR ADD SONG BUTTON
+        document.getElementById('add-button').onmousedown = (event) => {
+            this.model.addSong();
+        }
+
         // HANDLER FOR UNDO BUTTON
         document.getElementById("undo-button").onmousedown = (event) => {
             this.model.undo();
@@ -101,7 +107,13 @@ export default class PlaylisterController {
             // CLOSE THE MODAL
             let deleteListModal = document.getElementById("delete-list-modal");
             deleteListModal.classList.remove("is-visible");
-        }        
+        }
+        
+        // RESPOND TO THE USER CONFIRMING TO REMOVE SONG
+        let removeSongConfirmButton = document.getElementById('remove-song-confirm-button')
+        removeSongConfirmButton.onclick = (event) => {
+
+        }
     }
 
     /*
@@ -235,6 +247,96 @@ export default class PlaylisterController {
                     && !isNaN(fromIndex) 
                     && !isNaN(toIndex)) {
                     this.model.addMoveSongTransaction(fromIndex, toIndex);
+                }
+            }
+
+            // Register the remove song handler 
+            let removeSong = card.getElementsByTagName('input')[0]
+            removeSong.onmousedown = (event) => {
+                // Get the song name
+                let songId = (parseInt(event.target.parentNode.id.replace(/[^0-9\.]/g, '') , 10)) - 1 
+                let song = this.model.currentList.getSongAt(songId-1)
+                let songName = song.title
+
+                // VERIFY THAT THE USER REALLY WANTS TO REMOVE THE SONG
+                // THE CODE BELOW OPENS UP THE REMOVE SONG VERIFICATION DIALOG
+                let removeSongSpan = document.getElementById('remove-song-span')
+                removeSongSpan.innerHTML = "";
+                removeSongSpan.appendChild(document.createTextNode(songName + " "));
+                let removeSongModal = document.getElementById("remove-song-modal");
+
+                // OPEN UP THE DIALOG
+                removeSongModal.classList.add("is-visible");
+                this.model.toggleConfirmDialogOpen();
+
+                // CHECK IF THEY CONFIRM
+                let confirmRemoveSong = document.getElementById('remove-song-confirm-button')
+                confirmRemoveSong.onmousedown = () => {
+                    removeSongModal.classList.remove("is-visible")
+                    this.model.toggleConfirmDialogOpen();
+
+                    this.model.removeSong(songId)
+                }
+
+                // CHECK IF THEY CANCEL 
+                let cancelRemoveSong = document.getElementById('remove-song-cancel-button') 
+                cancelRemoveSong.onmousedown = () => {
+                    removeSongModal.classList.remove("is-visible")
+                    this.model.toggleConfirmDialogOpen();
+                }
+            }
+
+            card.ondblclick = (event) => {
+                console.log("You double clicked on me!")
+                // Extract the Song ID and extract the Song Object
+                let songId = (parseInt(event.target.id.replace(/[^0-9\.]/g, '') , 10)) - 1
+                let song = this.model.currentList.getSongAt(songId-1)
+
+                // Now that we have the object grab the title, artist, and Youtuber ID
+                let title = song.title
+                let artist = song.artist
+                let youTubeId = song.youTubeId
+
+                // Get the Update Song Modal Inputs from the doucment. 
+                let updateSongTitle = document.getElementById("update-song-input-title")
+                let updateSongArtist = document.getElementById("update-song-input-artist")
+                let updateSongYouTuvbeId = document.getElementById("update-song-input-youTubeId")
+
+                // Update the value of the inputs to reflect the song that was chosen
+                updateSongTitle.value = title
+                updateSongArtist.value = artist
+                updateSongYouTuvbeId.value = youTubeId
+
+                updateSongTitle.oninput = (event) => {
+                    updateSongTitle.value = event.target.value
+                }
+
+                updateSongArtist.oninput = (event) => {
+                    updateSongArtist.value = event.target.value
+                }
+
+                updateSongYouTuvbeId.oninput = (event) => {
+                    updateSongYouTuvbeId.value = event.target.value
+                }
+
+                // Get the Update Song Modal
+                let updateSongModal = document.getElementById("update-song-modal")
+                updateSongModal.classList.add("is-visible");
+                this.model.toggleConfirmDialogOpen();
+
+                // CHECK IF THEY CONFIRM
+                let confirmUpdateSong = document.getElementById('update-song-confirm-button')
+                confirmUpdateSong.onmousedown = (event) => {
+                    updateSongModal.classList.remove("is-visible")
+                    this.model.toggleConfirmDialogOpen();
+                    this.model.updateSong(songId, updateSongTitle.value, updateSongArtist.value, updateSongYouTuvbeId.value)
+                }
+
+                // CHECK IF THEY CANCEL
+                let cancelUpdateSong = document.getElementById('update-song-cancel-button')
+                cancelUpdateSong.onmousedown = (event) => {
+                    updateSongModal.classList.remove("is-visible")
+                    this.model.toggleConfirmDialogOpen();
                 }
             }
         }

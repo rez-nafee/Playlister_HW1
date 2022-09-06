@@ -11,7 +11,7 @@
     will be added in future versions.
     
     @author McKilla Gorilla
-    @author ?
+    @author Rezvan Nafee
 -->
 
 <head>
@@ -34,6 +34,7 @@
 <body>
     <!-- EVERY CONTROL (including our modals) APPEAR INSIDE THE root -->
     <div id="root">
+        
         <!-- OUR MAIN UI HAS 5 MAJOR REGIONS -->
         <div id="banner">
             Playlister
@@ -45,6 +46,7 @@
         <div id="sidebar-list">
         </div>
         <div id="edit-toolbar">
+            <input type="button" id='add-button' value="+" class="toolbar-button" />
             <input type="button" id='undo-button' value="⟲" class="toolbar-button" />
             <input type="button" id='redo-button' value="⟳" class="toolbar-button" />
             <input type="button" id='close-button' value="&#x2715;" class="toolbar-button" />
@@ -70,6 +72,56 @@
                 </div>
             </div>
         </div>
+
+        <!-- MODAL (i.e. dialog) FOR VERIFYING THE REMOVAL OF A SONG -->
+        <div class="modal" id="remove-song-modal" data-animation="slideInOutLeft">
+            <div class="modal-root" id='verify-remove-song-root'>
+                <div class="modal-north">
+                    Remove song?
+                </div>                
+                <div class="modal-center">
+                    <div class="modal-center-content">
+                        Are you sure you wish to permanently remove <span id="remove-song-span"></span>&nbsp bybfrom the playlist?
+                    </div>
+                </div>
+                <div class="modal-south">
+                    <input type="button" id="remove-song-confirm-button" class="modal-button" value='Confirm' />
+                    <input type="button" id="remove-song-cancel-button" class="modal-button" value='Cancel' />
+                </div>
+            </div>
+        </div>
+
+        <!-- MODAL (i.e. dialog) FOR UPDATING THE INFORMATION OF A SONG -->
+        <div class="modal" id="update-song-modal" data-animation="slideInOutLeft">
+            <div class="modal-root" id='verify-update-song-root'>
+                <div class="modal-north">
+                    Edit Song
+                </div>                
+                <div class="modal-center">
+                    <div class="modal-center-content">
+                        <label for='song-title'>Title:</label>
+                        <span>
+                            <input type="text" id="update-song-input-title" name="title"></input>
+                        </span>
+                        <br>
+                        <label for='song-artist'>Artist</label>
+                        <span>
+                            <input type="text" id="update-song-input-artist" name="artist"></input>
+                        </span>
+                        <br>
+                        <label for='song-youTubeId'>YouTube Id:</label>
+                        <span>
+                            <input type="text" id="update-song-input-youTubeId" name="youTubeId"></input>
+                        </span>
+                    </div>
+                </div>
+                <div class="modal-south">
+                    <input type="button" id="update-song-confirm-button" class="modal-button" value='Confirm' />
+                    <input type="button" id="update-song-cancel-button" class="modal-button" value='Cancel' />
+                </div>
+            </div>
+        </div>
+
     </div>
 </body>
 

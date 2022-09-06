@@ -9,7 +9,7 @@ import PlaylisterController from './PlaylisterController.js';
  * app with all needed initialization.
  * 
  * @author McKilla Gorilla
- * @author ?
+ * @author Rezvan Nafee
  */
 export class PlaylisterApp {
     constructor() {

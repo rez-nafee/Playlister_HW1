@@ -15,7 +15,7 @@ import MoveSong_Transaction from "./transactions/MoveSong_Transaction.js";
  * inside the view of the page.
  * 
  * @author McKilla Gorilla
- * @author ?
+ * @author Rezvan Nafee
  */
 export default class PlaylisterModel {
     /*
@@ -91,7 +91,6 @@ export default class PlaylisterModel {
     }
 
     // THESE ARE THE FUNCTIONS FOR MANAGING ALL THE LISTS
-
     addNewList(initName, initSongs) {
         let newList = new Playlist(this.nextListId++);
         if (initName)
@@ -233,7 +232,6 @@ export default class PlaylisterModel {
     }
 
     // NEXT WE HAVE THE FUNCTIONS THAT ACTUALLY UPDATE THE LOADED LIST
-
     moveSong(fromIndex, toIndex) {
         if (this.hasCurrentList()) {
             let tempArray = this.currentList.songs.filter((song, index) => index !== fromIndex);
@@ -243,6 +241,71 @@ export default class PlaylisterModel {
         }
         this.saveLists();
     }
+
+        // THESE ARE THE FUNCTIONS FOR MANAGING THE SONGS IN THE PLAYLIST
+
+    addSong(){
+        // Create an empty song to be added to the current list
+        let song = {
+            title: 'Untitled',
+            artist: 'Unknown',
+            youTubeId: 'dQw4w9WgXcQ'
+        }
+
+        // Append the song to the end of the songs array of the current list
+        this.currentList.songs.push(song)
+
+        // Refresh the view and save the songs we have in in the Playlist App
+        this.view.refreshPlaylist(this.currentList)
+        this.saveLists();
+    }
+
+    removeSong(songId){
+        // Make a copy of the current list of songs 
+        let tempSongArray = [...this.currentList.songs]
+        
+        // Find the song with the specified songId
+        let tempSong = tempSongArray[songId]
+
+        // Then find the index of the song that needs to be removed from the current list of songs
+        let index = tempSongArray.indexOf(tempSong)
+
+        // Remove the song that was selected from the copy of the songs 
+        tempSongArray.splice(index, 1)
+
+        console.log(this.currentList.songs)
+        console.log(tempSongArray)
+
+        //Update the current list of songs 
+        this.currentList.setSongs(tempSongArray);
+
+        // Refresh the view and save the songs we have in in the Playlist App
+        this.view.refreshPlaylist(this.currentList);
+        this.saveLists();
+    }
+
+    updateSong (songId, title, artist, youTubeId) {
+        // Make a copy of the current list of songs 
+        let tempSongArray = [...this.currentList.songs]
+        
+        // Create a new song to reflect the new changes made by the user
+        let tempSong = {
+            title: title,
+            artist: artist,
+            youTubeId: youTubeId
+        }
+
+        // Update the song at the specified index 
+        tempSongArray[songId] = tempSong
+
+        //Update the current list of songs 
+        this.currentList.setSongs(tempSongArray);
+
+        // Refresh the view and save the songs we have in in the Playlist App
+        this.view.refreshPlaylist(this.currentList);
+        this.saveLists();
+    }
+    
 
     // SIMPLE UNDO/REDO FUNCTIONS, NOTE THESE USE TRANSACTIONS
 
@@ -262,7 +325,6 @@ export default class PlaylisterModel {
 
     // NOW THE FUNCTIONS THAT CREATE AND ADD TRANSACTIONS
     // TO THE TRANSACTION STACK
-
     addMoveSongTransaction(fromIndex, onIndex) {
         let transaction = new MoveSong_Transaction(this, fromIndex, onIndex);
         this.tps.addTransaction(transaction);

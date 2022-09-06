@@ -6,7 +6,7 @@ import jsTPS_Transaction from "../../common/jsTPS.js"
  * and drop. It will be managed by the transaction stack.
  * 
  * @author McKilla Gorilla
- * @author ?
+ * @author Rezvan Nafee
  */
 export default class MoveSong_Transaction extends jsTPS_Transaction {
     constructor(initModel, initOldIndex, initNewIndex) {

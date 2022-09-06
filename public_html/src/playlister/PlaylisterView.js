@@ -5,7 +5,7 @@
  * for loading data into our controls and building other UI controls.
  * 
  * @author McKilla Gorilla
- * @author ?
+ * @author Rezvan Nafee
  */
 export default class PlaylisterView {
     constructor() {}
@@ -103,7 +103,8 @@ export default class PlaylisterView {
         // CLEAR OUT THE OLD SONG CARDS
         let itemsDiv = document.getElementById("playlist-cards");
         itemsDiv.innerHTML = "";
-
+        let youtubeURL = 'https://www.youtube.com/watch?v='
+        
         // FOR EACH SONG
         for (let i = 0; i < playlist.songs.length; i++) {
             // MAKE AN ITEM (i.e. CARD)
@@ -114,14 +115,33 @@ export default class PlaylisterView {
             itemDiv.id = "playlist-card-" + (i + 1);
 
             // PUT THE CONTENT INTO THE CARD
-            let itemText = document.createTextNode(song.title + " by " + song.artist);
+            let itemText = document.createTextNode((i + 1) + ". ");
+
+            // Create a hyperlink element that will link the user over to the Youtube video in a new tab. 
+            let hyperLink = document.createElement('a')
+            hyperLink.href = youtubeURL + playlist.getSongAt(i)['youTubeId']
+            hyperLink.innerHTML = song.title + " by " + song.artist
+            hyperLink.target = '_blank'
             itemDiv.appendChild(itemText);
+            itemDiv.appendChild(hyperLink)
+
+            // Create a delete button that will allow the user to delete the song from the playlist. 
+            let deleteButton = document.createElement("input");
+            deleteButton.setAttribute("type", "button");
+            deleteButton.setAttribute("class", "list-card-button");
+            deleteButton.setAttribute("value", "x");
+            deleteButton.id = "delete-song-" + (i + 1)
+
+            // Add the elements to the song 
+            itemDiv.appendChild(itemText);
+            itemDiv.appendChild(hyperLink)
+            itemDiv.appendChild(deleteButton)
 
             // AND PUT THE CARD INTO THE UI
             itemsDiv.appendChild(itemDiv);
         }
-        // NOW THAT THE CONTROLS EXIST WE CAN REGISTER EVENT
-        // HANDLERS FOR THEM
+        
+        // NOW THAT THE CONTROLS EXIST WE CAN REGISTER EVENT 
         this.controller.registerItemHandlers();
     }
 
