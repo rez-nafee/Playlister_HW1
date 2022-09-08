@@ -1,6 +1,10 @@
 import jsTPS from "../common/jsTPS.js";
 import Playlist from "./Playlist.js";
+import AddSong_Transaction from "./transactions/AddSong_Transaction.js";
+
 import MoveSong_Transaction from "./transactions/MoveSong_Transaction.js";
+import UpdateSong_Transaction from "./transactions/UpdateSong_Transaction.js";
+import RemoveSong_Transaction from "./transactions/RemoveSong_Transaction.js";
 
 /**
  * PlaylisterModel.js
@@ -242,7 +246,7 @@ export default class PlaylisterModel {
         this.saveLists();
     }
 
-        // THESE ARE THE FUNCTIONS FOR MANAGING THE SONGS IN THE PLAYLIST
+    // THESE ARE THE FUNCTIONS FOR MANAGING THE SONGS IN THE PLAYLIST
 
     addSong(){
         // Create an empty song to be added to the current list
@@ -253,10 +257,27 @@ export default class PlaylisterModel {
         }
 
         // Append the song to the end of the songs array of the current list
-        this.currentList.songs.push(song)
+        this.currentList.songs.push(song);
 
         // Refresh the view and save the songs we have in in the Playlist App
-        this.view.refreshPlaylist(this.currentList)
+        this.view.refreshPlaylist(this.currentList);
+        this.saveLists();
+        
+        // Return the song's ID number
+        return this.currentList.songs.length - 1;
+    }
+
+    addSongAt(songId, song){
+        let tempSongArray = [...this.currentList.songs];
+
+        //Start at the specified index, delete 0 songs, and insert the song 
+        tempSongArray.splice(songId, 0, song);
+
+        //Update the current list of songs 
+        this.currentList.setSongs(tempSongArray);
+
+        // Refresh the view and save the songs we have in in the Playlist App
+        this.view.refreshPlaylist(this.currentList);
         this.saveLists();
     }
 
@@ -282,6 +303,9 @@ export default class PlaylisterModel {
         // Refresh the view and save the songs we have in in the Playlist App
         this.view.refreshPlaylist(this.currentList);
         this.saveLists();
+
+        //Return the song that was removed
+        return tempSong
     }
 
     updateSong (songId, title, artist, youTubeId) {
@@ -328,6 +352,24 @@ export default class PlaylisterModel {
     addMoveSongTransaction(fromIndex, onIndex) {
         let transaction = new MoveSong_Transaction(this, fromIndex, onIndex);
         this.tps.addTransaction(transaction);
+        this.view.updateToolbarButtons(this);
+    }
+
+    addSongTransaction(){
+        let transaction = new AddSong_Transaction(this);
+        this.tps.addTransaction(transaction);
+        this.view.updateToolbarButtons(this);
+    }
+
+    removeSongTransaction(songId){
+        let transaction = new RemoveSong_Transaction(this, songId);
+        this.tps.addTransaction(transaction)
+        this.view.updateToolbarButtons(this)
+    }
+
+    updateSongTransaction(songId, title, artist, youTubeID, oldTitle, oldArtist, oldYoutubeId){
+        let transaction = new UpdateSong_Transaction(this, songId, title, artist, youTubeID, oldTitle, oldArtist, oldYoutubeId)
+        this.tps.addTransaction(transaction)
         this.view.updateToolbarButtons(this);
     }
 }
