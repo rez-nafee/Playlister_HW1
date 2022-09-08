@@ -54,7 +54,7 @@ export default class PlaylisterController {
 
         //HANDLER FOR ADD SONG BUTTON
         document.getElementById('add-button').onmousedown = (event) => {
-            this.model.addSong();
+            this.model.addSongTransaction();
         }
 
         // HANDLER FOR UNDO BUTTON
@@ -255,7 +255,7 @@ export default class PlaylisterController {
             removeSong.onmousedown = (event) => {
                 // Get the song name
                 let songId = (parseInt(event.target.parentNode.id.replace(/[^0-9\.]/g, '') , 10)) - 1 
-                let song = this.model.currentList.getSongAt(songId-1)
+                let song = this.model.currentList.getSongAt(songId)
                 let songName = song.title
 
                 // VERIFY THAT THE USER REALLY WANTS TO REMOVE THE SONG
@@ -275,7 +275,7 @@ export default class PlaylisterController {
                     removeSongModal.classList.remove("is-visible")
                     this.model.toggleConfirmDialogOpen();
 
-                    this.model.removeSong(songId)
+                    this.model.removeSongTransaction(songId);
                 }
 
                 // CHECK IF THEY CANCEL 
@@ -287,10 +287,9 @@ export default class PlaylisterController {
             }
 
             card.ondblclick = (event) => {
-                console.log("You double clicked on me!")
                 // Extract the Song ID and extract the Song Object
                 let songId = (parseInt(event.target.id.replace(/[^0-9\.]/g, '') , 10)) - 1
-                let song = this.model.currentList.getSongAt(songId-1)
+                let song = this.model.currentList.getSongAt(songId)
 
                 // Now that we have the object grab the title, artist, and Youtuber ID
                 let title = song.title
@@ -306,6 +305,9 @@ export default class PlaylisterController {
                 updateSongTitle.value = title
                 updateSongArtist.value = artist
                 updateSongYouTuvbeId.value = youTubeId
+
+                // Hold the old values of the song before the change 
+            
 
                 updateSongTitle.oninput = (event) => {
                     updateSongTitle.value = event.target.value
@@ -329,7 +331,7 @@ export default class PlaylisterController {
                 confirmUpdateSong.onmousedown = (event) => {
                     updateSongModal.classList.remove("is-visible")
                     this.model.toggleConfirmDialogOpen();
-                    this.model.updateSong(songId, updateSongTitle.value, updateSongArtist.value, updateSongYouTuvbeId.value)
+                    this.model.updateSongTransaction(songId, updateSongTitle.value, updateSongArtist.value, updateSongYouTuvbeId.value, title, artist, youTubeId)
                 }
 
                 // CHECK IF THEY CANCEL

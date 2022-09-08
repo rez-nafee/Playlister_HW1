@@ -162,3 +162,16 @@ body {
 .disabled:hover {
   color: var(--swatch-neutral);
 }
+
+.update-song-container {
+  display: table;
+}
+
+label.update-song-container{
+  display: table-cell;
+}
+
+span.update-song-container{
+  display: table-cell;
+  padding: 0 4px 0 6px;
+}
