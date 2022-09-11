@@ -224,23 +224,28 @@ export default class PlaylisterView {
             this.disableButton("close-button");
             this.disableButton("add-button");
         }
-        if(model.hasCurrentList()){
+        if(model.hasCurrentList() && !model.confirmDialogOpen){
             this.enableButton("add-button")
             this.enableButton("close-button")
             this.disableButton("add-list-button")
-        }else {
+        }
+        else {
             this.disableButton("add-button")
             this.disableButton("close-button")
-            this.enableButton("add-list-button")
         }
 
-        if (tps.hasTransactionToRedo()){
+        if(!model.hasCurrentList()){
+            this.enableButton('add-list-button')
+        }
+
+
+        if (tps.hasTransactionToRedo() && !model.confirmDialogOpen){
             this.enableButton("redo-button")
         }else{
             this.disableButton("redo-button")
         }
 
-        if (tps.hasTransactionToUndo()){
+        if (tps.hasTransactionToUndo() && !model.confirmDialogOpen){
             this.enableButton("undo-button")
         }else{
             this.disableButton("undo-button")
