@@ -6,7 +6,6 @@
  * 
  * @author McKilla Gorilla
  * @author Rezvan Nafee
- * @author Tamim Rahman 
  */
 export default class PlaylisterView {
     constructor() {}
@@ -224,6 +223,15 @@ export default class PlaylisterView {
             this.disableButton("close-button");
             this.disableButton("add-button");
         }
+
+        if (model.confirmDialogOpen && !this.model.hasCurrentList()){
+            this.disableButton("add-list-button");
+            this.disableButton("undo-button");
+            this.disableButton("redo-button");
+            this.disableButton("close-button");
+            this.disableButton("add-button");
+        }
+
         if(model.hasCurrentList() && !model.confirmDialogOpen){
             this.enableButton("add-button")
             this.enableButton("close-button")
