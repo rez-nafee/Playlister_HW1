@@ -216,22 +216,27 @@ export default class PlaylisterView {
     */
     updateToolbarButtons(model) {
         let tps = model.tps;
-        if (model.confirmDialogOpen){
-            this.disableButton("add-list-button");
-            this.disableButton("undo-button");
-            this.disableButton("redo-button");
-            this.disableButton("close-button");
-            this.disableButton("add-button");
+
+        // Check if currently have a list open.
+        if(!model.hasCurrentList()){
+            this.enableButton('add-list-button')
         }
 
-        if (model.confirmDialogOpen && !this.model.hasCurrentList()){
-            this.disableButton("add-list-button");
-            this.disableButton("undo-button");
-            this.disableButton("redo-button");
-            this.disableButton("close-button");
-            this.disableButton("add-button");
+        // Check if we have a Transaction to Redo
+         if (tps.hasTransactionToRedo() && !model.confirmDialogOpen){
+            this.enableButton("redo-button")
+        }else{
+            this.disableButton("redo-button")
         }
 
+        // Check if we have a Transaction to Undo
+        if (tps.hasTransactionToUndo() && !model.confirmDialogOpen){
+            this.enableButton("undo-button")
+        }else{
+            this.disableButton("undo-button")
+        }
+
+        // Check if we are working on a list
         if(model.hasCurrentList() && !model.confirmDialogOpen){
             this.enableButton("add-button")
             this.enableButton("close-button")
@@ -241,22 +246,14 @@ export default class PlaylisterView {
             this.disableButton("add-button")
             this.disableButton("close-button")
         }
-
-        if(!model.hasCurrentList()){
-            this.enableButton('add-list-button')
-        }
-
-
-        if (tps.hasTransactionToRedo() && !model.confirmDialogOpen){
-            this.enableButton("redo-button")
-        }else{
-            this.disableButton("redo-button")
-        }
-
-        if (tps.hasTransactionToUndo() && !model.confirmDialogOpen){
-            this.enableButton("undo-button")
-        }else{
-            this.disableButton("undo-button")
+        
+        // Check if any of the modals are open
+        if (model.confirmDialogOpen){
+            this.disableButton("add-list-button");
+            this.disableButton("undo-button");
+            this.disableButton("redo-button");
+            this.disableButton("close-button");
+            this.disableButton("add-button");
         }
     }
 
