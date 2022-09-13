@@ -299,12 +299,12 @@ export default class PlaylisterController {
                 // Get the Update Song Modal Inputs from the doucment. 
                 let updateSongTitle = document.getElementById("update-song-input-title")
                 let updateSongArtist = document.getElementById("update-song-input-artist")
-                let updateSongYouTuvbeId = document.getElementById("update-song-input-youTubeId")
+                let updateSongYouTubeId = document.getElementById("update-song-input-youTubeId")
 
                 // Update the value of the inputs to reflect the song that was chosen
                 updateSongTitle.value = title
                 updateSongArtist.value = artist
-                updateSongYouTuvbeId.value = youTubeId
+                updateSongYouTubeId.value = youTubeId
 
                 // Hold the old values of the song before the change 
             
@@ -317,8 +317,8 @@ export default class PlaylisterController {
                     updateSongArtist.value = event.target.value
                 }
 
-                updateSongYouTuvbeId.oninput = (event) => {
-                    updateSongYouTuvbeId.value = event.target.value
+                updateSongYouTubeId.oninput = (event) => {
+                    updateSongYouTubeId.value = event.target.value
                 }
 
                 // Get the Update Song Modal
@@ -331,7 +331,8 @@ export default class PlaylisterController {
                 confirmUpdateSong.onmousedown = (event) => {
                     updateSongModal.classList.remove("is-visible")
                     this.model.toggleConfirmDialogOpen();
-                    this.model.updateSongTransaction(songId, updateSongTitle.value, updateSongArtist.value, updateSongYouTuvbeId.value, title, artist, youTubeId)
+                    if (!(updateSongTitle.value == title || updateSongArtist.value == artist || updateSongYouTubeId.value == youTubeId))
+                        this.model.updateSongTransaction(songId, updateSongTitle.value, updateSongArtist.value, updateSongYouTubeId.value, title, artist, youTubeId)
                 }
 
                 // CHECK IF THEY CANCEL
